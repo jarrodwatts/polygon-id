@@ -73,6 +73,7 @@ export default async function handleVerification(
 
     return res.status(200).send(authResponse);
   } catch (error) {
+    console.error(error);
     return res.status(500).send(error);
   }
 }
