@@ -61,11 +61,8 @@ export default async function handleVerification(
   // EXECUTE VERIFICATION
   const verifier = new auth.Verifier(verificationKeyloader, sLoader, resolvers);
 
-  console.log("TOKEN STR:");
-  console.log(tokenStr);
-
   console.log("AUTH REQUEST:");
-  console.log(authRequest);
+  console.log(JSON.parse(JSON.stringify(authRequest.request)));
 
   try {
     const authResponse = await verifier.fullVerify(
