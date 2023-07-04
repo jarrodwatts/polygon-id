@@ -31,9 +31,9 @@ export default async function handleVerification(
     .get();
   const { data } = record; // or const data = record.data
 
-  console.log(data);
-
   const authRequest = JSON.parse(JSON.stringify(data));
+
+  console.log(authRequest);
 
   // get JWZ token params from the post request
   const raw = await getRawBody(req);
@@ -57,11 +57,17 @@ export default async function handleVerification(
   const verificationKeyloader = new loaders.FSKeyLoader(
     path.join(process.cwd(), "keys")
   );
-  // @ts-ignore
+
   const sLoader = new loaders.UniversalSchemaLoader("ipfs.io");
 
   // EXECUTE VERIFICATION
   const verifier = new auth.Verifier(verificationKeyloader, sLoader, resolvers);
+
+  console.log("TOKEN STR:");
+  console.log(tokenStr);
+
+  console.log("AUTH REQUEST:");
+  console.log(authRequest);
 
   try {
     const authResponse = await verifier.fullVerify(tokenStr, authRequest, {
