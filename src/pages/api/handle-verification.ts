@@ -61,6 +61,10 @@ export default async function handleVerification(
   // EXECUTE VERIFICATION
   const verifier = new auth.Verifier(verificationKeyloader, sLoader, resolvers);
 
+  console.log("=== request ===");
+  console.log(authRequest.request);
+
+  console.log("=== body ===");
   console.log(authRequest.request.body);
 
   try {
