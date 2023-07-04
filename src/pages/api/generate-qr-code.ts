@@ -15,7 +15,12 @@ export default async function generateQrCode(
     // Sender: The audience represents the DID of the requester
     "did:polygonid:polygon:mumbai:2qDyy1kEo2AYcP3RT4XGea7BtxsY285szg6yP9SPrs",
     // callbackUrl: Where should the user be redirected after the request is complete?
-    `/api/handle-verification?requestId=${requestId}`
+    `${
+      // if local env
+      process.env.NODE_ENV === "production"
+        ? "https://polygon-id-tau.vercel.app"
+        : "http://localhost:3000"
+    }/api/handle-verification?requestId=${requestId}`
   );
 
   request.id = requestId;
