@@ -45,7 +45,7 @@ export default async function handleVerification(
   const mumbaiContractAddress = "0x134B1BE34911E39A8397ec6289782989729807a4";
 
   const ethStateResolver = new resolver.EthStateResolver(
-    "mumbai.rpc.thirdweb.com",
+    "https://mumbai.rpc.thirdweb.com",
     mumbaiContractAddress
   );
 
