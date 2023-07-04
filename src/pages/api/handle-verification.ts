@@ -63,15 +63,15 @@ export default async function handleVerification(
 
   console.log("=== request ===");
   console.log("Type:", typeof authRequest.request);
-  console.log(authRequest.request);
+  console.log(JSON.parse(authRequest).request);
 
   console.log("=== body ===");
-  console.log(authRequest.request.body);
+  console.log(JSON.parse(authRequest).request.body);
 
   try {
     const authResponse = await verifier.fullVerify(
       tokenStr,
-      authRequest.request,
+      JSON.parse(authRequest).request,
       {
         acceptedStateTransitionDelay: 5 * 60 * 1000, // up to a 5 minute delay accepted by the Verifier
       }
