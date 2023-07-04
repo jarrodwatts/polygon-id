@@ -61,6 +61,8 @@ export default async function handleVerification(
   // EXECUTE VERIFICATION
   const verifier = new auth.Verifier(verificationKeyloader, sLoader, resolvers);
 
+  console.log(authRequest);
+
   console.log("=== request ===");
   console.log("Type:", typeof authRequest.request);
   console.log(JSON.parse(authRequest).request);
