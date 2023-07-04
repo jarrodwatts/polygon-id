@@ -24,6 +24,9 @@ export default async function handleVerification(
     .record(requestId as string)
     .get();
   const { data } = record; // or const data = record.data
+
+  console.log(data);
+
   const authRequest = JSON.parse(data);
 
   // get JWZ token params from the post request
