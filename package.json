@@ -11,6 +11,7 @@
   "dependencies": {
     "@iden3/js-iden3-auth": "1.0.0-beta.7",
     "@polybase/client": "^0.6.2",
+    "@radix-ui/react-separator": "^1.0.3",
     "@radix-ui/react-slot": "^1.0.2",
     "@tanstack/react-query": "^4.29.19",
     "@types/node": "20.3.3",

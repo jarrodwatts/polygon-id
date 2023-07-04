@@ -61,13 +61,12 @@ export default async function handleVerification(
   // EXECUTE VERIFICATION
   const verifier = new auth.Verifier(verificationKeyloader, sLoader, resolvers);
 
-  console.log("AUTH REQUEST:");
-  console.log(JSON.parse(JSON.stringify(authRequest.request)));
+  console.log(authRequest.request.body);
 
   try {
     const authResponse = await verifier.fullVerify(
       tokenStr,
-      JSON.parse(JSON.stringify(authRequest.request)),
+      authRequest.request,
       {
         acceptedStateTransitionDelay: 5 * 60 * 1000, // up to a 5 minute delay accepted by the Verifier
       }

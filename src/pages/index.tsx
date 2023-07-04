@@ -1,6 +1,8 @@
-import { useQRCode } from "next-qrcode";
 import useGenerateQrCode from "@/hooks/useGenerateQrCode";
+import { useQRCode } from "next-qrcode";
 import { v4 as uuidv4 } from "uuid";
+import { Separator } from "@/components/ui/separator";
+
 import Link from "next/link";
 
 export default function Home() {
@@ -23,12 +25,14 @@ export default function Home() {
         A Next.js template to get started with Polygon ID.
       </p>
 
+      <Separator className="mb-4 w-1/2" />
+
       <p className="leading-7 text-center max-w-xl mt-2 mb-2">
-        1/ Scan the QR code from your Polygon ID on{" "}
+        1/ Scan the QR code from your Polygon ID wallet on{" "}
         <Link
           className="underline font-semibold"
           target="_blank"
-          href="https://play.google.com/store/apps/details?id=com.polygonid.wallet&pli=1"
+          href="https://apps.apple.com/us/app/polygon-id/id1629870183"
         >
           iOS
         </Link>{" "}
@@ -40,6 +44,7 @@ export default function Home() {
         >
           Android
         </Link>
+        .
       </p>
 
       {qrCodeError && (
