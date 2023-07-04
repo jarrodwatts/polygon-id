@@ -27,7 +27,7 @@ export default async function handleVerification(
 
   console.log(data);
 
-  const authRequest = JSON.parse(data);
+  const authRequest = JSON.parse(JSON.stringify(data));
 
   // get JWZ token params from the post request
   const raw = await getRawBody(req);
