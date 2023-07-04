@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@iden3/js-iden3-auth": "^1.0.0-beta.12",
+    "@iden3/js-iden3-auth": "1.0.0-beta.7",
     "@polybase/client": "^0.6.2",
     "@radix-ui/react-slot": "^1.0.2",
     "@tanstack/react-query": "^4.29.19",

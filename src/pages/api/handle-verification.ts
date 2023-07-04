@@ -61,18 +61,17 @@ export default async function handleVerification(
   const sLoader = new loaders.UniversalSchemaLoader("ipfs.io");
 
   // EXECUTE VERIFICATION
-  // @ts-ignore
   const verifier = new auth.Verifier(verificationKeyloader, sLoader, resolvers);
 
   try {
-    const opts = {
-      AcceptedStateTransitionDelay: 5 * 60 * 1000, // 5 minute
-    };
-
-    const authResponse = await verifier.fullVerify(tokenStr, authRequest, opts);
+    const authResponse = await verifier.fullVerify(tokenStr, authRequest, {
+      acceptedStateTransitionDelay: 5 * 60 * 1000, // up to a 5 minute delay accepted by the Verifier
+    });
 
     console.log("AUTH RESPONSE:");
     console.log(authResponse);
+
+    return res.status(200).send(authResponse);
   } catch (error) {
     return res.status(500).send(error);
   }
