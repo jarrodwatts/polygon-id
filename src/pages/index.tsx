@@ -51,12 +51,7 @@ export default function Home() {
         <p className="text-center">Loading...</p>
       ) : (
         <div className="flex justify-center">
-          <Canvas
-            text={JSON.stringify(qrCode)}
-            options={{
-              width: 256,
-            }}
-          />
+          <Canvas text={JSON.stringify(qrCode)} />
         </div>
       )}
     </main>
