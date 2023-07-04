@@ -4,6 +4,12 @@ import { auth, resolver, loaders } from "@iden3/js-iden3-auth";
 import getRawBody from "raw-body";
 import path from "path";
 
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
+
 export default async function handleVerification(
   req: NextApiRequest,
   res: NextApiResponse
