@@ -1,13 +1,13 @@
+import { useMemo } from "react";
 import useGenerateQrCode from "@/hooks/useGenerateQrCode";
 import useCheckForResponse from "@/hooks/useVerificationResponse";
 import { useQRCode } from "next-qrcode";
 import { v4 as uuidv4 } from "uuid";
 import { Separator } from "@/components/ui/separator";
-
 import Link from "next/link";
 
 export default function Home() {
-  const sessionId = uuidv4();
+  const sessionId = useMemo(() => uuidv4(), []);
   const { Canvas } = useQRCode();
   const {
     data: qrCode,
