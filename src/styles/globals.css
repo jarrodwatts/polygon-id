@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/**
+* We're using the https://ui.shadcn.com/ library for UI.
+*/
 @layer base {
   :root {
     --background: 224 71% 4%;

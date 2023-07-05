@@ -2,30 +2,41 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { Polybase } from "@polybase/client";
 import { auth } from "@iden3/js-iden3-auth";
 
+/**
+ * API Route for generating a QR Code for the verification process.
+ */
 export default async function generateQrCode(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  // Get the session ID out of the request body.
   const { requestId } = req.body;
 
-  // 1. createAuthorizationRequest (create a new request)
+  // Create the authorization request
+  // Learn more: https://0xpolygonid.github.io/tutorials/verifier/verification-library/request-api-guide/#createauthorizationrequest
   const request = auth.createAuthorizationRequest(
-    // Reason: What is the reason for this request?
+    // Reason for the authorization request
     "Must be born before this year",
-    // Sender: The audience represents the DID of the requester
-    "did:polygonid:polygon:mumbai:2qDyy1kEo2AYcP3RT4XGea7BtxsY285szg6yP9SPrs",
-    // callbackUrl: Where should the user be redirected after the request is complete?
+
+    // Polygon ID of the requester
+    process.env.NEXT_PUBLIC_SENDER_DID as string,
+
+    // Callback URL. What API Route to run to verify the proof?
     `${
-      // if local env
-      process.env.NODE_ENV === "production"
-        ? "https://polygon-id-tau.vercel.app"
-        : "http://localhost:3000"
-    }/api/handle-verification?requestId=${requestId}`
+      process.env.NODE_ENV === "production" // Am I in production?
+        ? process.env.NEXT_PUBLIC_PRODUCTION_URL // Yes, use production URL
+        : process.env.NEXT_PUBLIC_DEVELOPMENT_URL // No, use development URL
+    }/api/handle-verification?requestId=${requestId}` // To verify, use the handle-verification API route
   );
 
+  // Set ID and thread ID to the session ID
   request.id = requestId;
   request.thid = requestId;
 
+  // Here, we'll append some extra scope to the request.
+  // This allows us to verify the user's age.
+  // Design your own customised authentication requirement here using Query Language:
+  // https://0xpolygonid.github.io/tutorials/verifier/verification-library/zk-query-language/
   const scope = request.body.scope ?? [];
   request.body.scope = [
     ...scope,
@@ -39,21 +50,19 @@ export default async function generateQrCode(
           "https://raw.githubusercontent.com/iden3/claim-schema-vocab/main/schemas/json-ld/kyc-v3.json-ld",
         credentialSubject: {
           birthday: {
-            $lt: 20230101,
+            $lt: 20230101, // Birthday must be less than this date.
           },
         },
       },
     },
   ];
 
-  // Store request in Polybase DB
+  // Store the request in the Polybase database
   const db = new Polybase({
-    defaultNamespace:
-      "pk/0x2cd58ee4f9908a52b63882a622fb778e21b0b35a177ca5d3b7d9f0cd51eaaf4ec36f0c799e7002598fa2bf80590951a979164f67f0e1a1de5d1a29501681b056/test-polygon-id-app",
+    defaultNamespace: process.env.NEXT_PUBLIC_POLYBASE_NAMESPACE,
   });
+  await db.collection("Requests").create([requestId, JSON.stringify(request)]);
 
-  await db.collection("Proofs").create([requestId, JSON.stringify(request)]);
-
-  // Send request back to client
+  // Send the QR code back to the client.
   res.status(200).json({ request });
 }

@@ -7,34 +7,29 @@ import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
+/**
+ * The homepage.
+ */
 export default function Home() {
+  // Generate a unique session ID using uuid library.
   const sessionId = useMemo(() => uuidv4(), []);
+
+  // Used to render the QR code.
   const { Canvas } = useQRCode();
+
+  // Fetch the QR code from the server with loading + error states thanks to TanStack Query.
   const {
     data: qrCode,
     isLoading: loadingQrCode,
     isError: qrCodeError,
   } = useGenerateQrCode(sessionId);
 
-  const {
-    data: verificationResponse,
-    isLoading: loadingVerificationResponse,
-    isError: verificationResponseError,
-  } = useCheckForResponse(sessionId, !!qrCode);
-
-  console.log("Session ID:", sessionId);
-
-  console.log("QR Code:", {
-    qrCode,
-    loadingQrCode,
-    qrCodeError,
-  });
-
-  console.log("Verification Response:", {
-    verificationResponse,
-    loadingVerificationResponse,
-    verificationResponseError,
-  });
+  // Once a QR code has been loaded, check the DB every 5 seconds for a verification response.
+  // That response indicates a user has successfully submitted their proof and it was verified by the server.
+  const { data: verificationResponse } = useCheckForResponse(
+    sessionId,
+    !!qrCode
+  );
 
   return (
     <main className="flex min-h-screen flex-col items-center p-5 pt-24 text-center">
@@ -49,6 +44,7 @@ export default function Home() {
         proofs.
       </p>
 
+      {/* Render the verification status */}
       <p className="text-center max-w-2xl mb-4 text-2xl">
         Your current status:{" "}
         {!!verificationResponse ? (
@@ -104,7 +100,6 @@ export default function Home() {
         .
       </p>
 
-      {/* flex horizontal  with 2 buttons that open links to the app store */}
       <div className="flex justify-center space-x-4 mt-4">
         <Button
           className="bg-gradient-to-br"
@@ -152,6 +147,7 @@ export default function Home() {
         website.
       </p>
 
+      {/* Render the QR code with loading + error states */}
       {qrCodeError && (
         <p className="text-center">
           Something went wrong generating the QR code.
@@ -163,13 +159,20 @@ export default function Home() {
         <div className="flex justify-center">
           <Canvas
             text={JSON.stringify(qrCode)}
-            // Max width 100% of screen
             options={{
-              width: 256 + 128,
+              width: 384,
             }}
           />
         </div>
       )}
+
+      <a
+        href="https://github.com/jarrodwatts/polygon-id"
+        target="_blank"
+        className="text-md text-muted-foreground mt-8 underline semibold"
+      >
+        View the source code on GitHub.
+      </a>
     </main>
   );
 }

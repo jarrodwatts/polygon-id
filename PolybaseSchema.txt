@@ -1,0 +1,21 @@
+@public
+collection Requests {
+  id: string;
+  request: string; 
+
+  constructor (id: string, request: string) {
+    this.id = id;
+    this.request = request;
+  }
+}
+
+@public
+collection Responses {
+  id: string;
+  response: string; 
+
+  constructor (id: string, response: string) {
+    this.id = id;
+    this.response = response;
+  }
+}

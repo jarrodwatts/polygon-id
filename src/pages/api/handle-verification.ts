@@ -4,36 +4,42 @@ import { auth, resolver, loaders } from "@iden3/js-iden3-auth";
 import getRawBody from "raw-body";
 import path from "path";
 
+// This is some config to tell Next.js to not parse the request body.
+// Because we need the raw body later.
 export const config = {
   api: {
     bodyParser: false,
   },
 };
 
+/**
+ * API Route to handle the verification of the ZK proofs submitted from Polygon ID app.
+ * This API route is never explicitly called from the client, but rather is a callback URL
+ * that gets run when the user submits the proof from the Polygon ID app.
+ */
 export default async function handleVerification(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  console.log("HANDLE VERIFICATION");
-
-  // get requestId from query params
+  // Get the session ID so we know what request we're talking about.
   const { requestId } = req.query;
 
-  // Read session ID from Polybase
+  // Initialize Polybase
   const db = new Polybase({
-    defaultNamespace:
-      "pk/0x2cd58ee4f9908a52b63882a622fb778e21b0b35a177ca5d3b7d9f0cd51eaaf4ec36f0c799e7002598fa2bf80590951a979164f67f0e1a1de5d1a29501681b056/test-polygon-id-app",
+    defaultNamespace: process.env.NEXT_PUBLIC_POLYBASE_NAMESPACE,
   });
 
+  // Read the request from the database using the session ID
   const record = await db
-    .collection("Proofs")
+    .collection("Requests")
     .record(requestId as string)
     .get();
-  const { data } = record; // or const data = record.data
+  const { data } = record;
 
+  // Parse it to JSON format
   const authRequest = JSON.parse(JSON.stringify(data));
 
-  // get JWZ token params from the post request
+  // Get JWZ token params from the post request
   const raw = await getRawBody(req);
   const tokenStr = raw.toString().trim();
 
@@ -42,26 +48,30 @@ export default async function handleVerification(
   // https://0xpolygonid.github.io/tutorials/contracts/overview/#blockchain-addresses
   const mumbaiContractAddress = "0x134B1BE34911E39A8397ec6289782989729807a4";
 
+  // Values for the verifier
   const ethStateResolver = new resolver.EthStateResolver(
     "https://mumbai.rpc.thirdweb.com",
     mumbaiContractAddress
   );
 
+  // Values for the verifier
   const resolvers = {
     ["polygon:mumbai"]: ethStateResolver,
   };
 
   // Locate the directory that contains circuit's verification keys
   const verificationKeyloader = new loaders.FSKeyLoader(
-    path.join(process.cwd(), "keys")
+    path.join(process.cwd(), "keys") // See the "keys" folder in the root directory
   );
 
+  // Values for the verifier
   const sLoader = new loaders.UniversalSchemaLoader("ipfs.io");
 
-  // EXECUTE VERIFICATION
+  // Initialize the verifier with the values described above.
   const verifier = new auth.Verifier(verificationKeyloader, sLoader, resolvers);
 
   try {
+    // Kick off verification process.
     const authResponse = await verifier.fullVerify(
       tokenStr,
       JSON.parse(authRequest.request),
@@ -70,10 +80,12 @@ export default async function handleVerification(
       }
     );
 
+    // Save verification result in the database so client can read it
     await db
       .collection("Responses")
       .create([requestId as string, JSON.stringify(authResponse)]);
 
+    // Send back to client, but doesn't get read this way. It gets read from the DB poll.
     return res.status(200).send(authResponse);
   } catch (error) {
     console.error(error);

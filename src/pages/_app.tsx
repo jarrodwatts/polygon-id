@@ -4,6 +4,9 @@ import "@/styles/globals.css";
 
 const queryClient = new QueryClient();
 
+/**
+ * Wrap the application in TanStack Query's QueryClientProvider
+ */
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <QueryClientProvider client={queryClient}>
