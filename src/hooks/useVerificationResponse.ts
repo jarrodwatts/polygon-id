@@ -30,7 +30,7 @@ export default function useCheckForResponse(
     queryKey: ["checkForResponse", id],
     queryFn: () => checkForResponse(id),
     retry: true,
-    retryDelay: 2500,
+    retryDelay: 5000,
     retryOnMount: true,
     enabled,
   });
