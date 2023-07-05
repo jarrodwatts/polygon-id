@@ -70,8 +70,9 @@ export default async function handleVerification(
       }
     );
 
-    console.log("AUTH RESPONSE:");
-    console.log(authResponse);
+    await db
+      .collection("Responses")
+      .create([requestId as string, JSON.stringify(authResponse)]);
 
     return res.status(200).send(authResponse);
   } catch (error) {

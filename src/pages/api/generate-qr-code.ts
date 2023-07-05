@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Polybase } from "@polybase/client";
-import { auth, resolver, loaders } from "@iden3/js-iden3-auth";
+import { auth } from "@iden3/js-iden3-auth";
 
 export default async function generateQrCode(
   req: NextApiRequest,

@@ -1,4 +1,5 @@
 import useGenerateQrCode from "@/hooks/useGenerateQrCode";
+import useCheckForResponse from "@/hooks/useVerificationResponse";
 import { useQRCode } from "next-qrcode";
 import { v4 as uuidv4 } from "uuid";
 import { Separator } from "@/components/ui/separator";
@@ -14,7 +15,17 @@ export default function Home() {
     isError: qrCodeError,
   } = useGenerateQrCode(sessionId);
 
-  console.log({ qrCode, loadingQrCode });
+  const {
+    data: verificationResponse,
+    isLoading: loadingVerificationResponse,
+    isError: verificationResponseError,
+  } = useCheckForResponse(sessionId, !!qrCode);
+
+  console.log({
+    verificationResponse,
+    loadingVerificationResponse,
+    verificationResponseError,
+  });
 
   return (
     <main className={`flex min-h-screen flex-col items-center p-12 pt-24 `}>

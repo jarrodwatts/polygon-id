@@ -14,7 +14,7 @@ const generateQrCode = async (id: string) => {
 
 export default function useGenerateQrCode(sessionId: string) {
   return useQuery({
-    queryKey: ["generateQrCode"],
+    queryKey: ["generateQrCode", sessionId],
     queryFn: () => generateQrCode(sessionId),
     refetchOnWindowFocus: false,
     cacheTime: 0,
