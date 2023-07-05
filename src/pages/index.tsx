@@ -21,6 +21,8 @@ export default function Home() {
     isError: verificationResponseError,
   } = useCheckForResponse(sessionId, !!qrCode);
 
+  console.log("Session ID:", sessionId);
+
   console.log("QR Code:", {
     qrCode,
     loadingQrCode,
