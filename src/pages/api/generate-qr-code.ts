@@ -45,12 +45,11 @@ export default async function generateQrCode(
       circuitId: "credentialAtomicQuerySigV2",
       query: {
         allowedIssuers: ["*"],
-        type: "KYCAgeCredential",
-        context:
-          "https://raw.githubusercontent.com/iden3/claim-schema-vocab/main/schemas/json-ld/kyc-v3.json-ld",
+        type: "UniversityDegree",
+        context: "https://docknetwork.github.io/vc-schemas/university-degree.json-ld",
         credentialSubject: {
-          birthday: {
-            $lt: 20230101, // Birthday must be less than this date.
+          degreeName: {
+            $eq: 'Physics', // TODO should be a param
           },
         },
       },
