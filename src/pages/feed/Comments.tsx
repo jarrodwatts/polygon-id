@@ -43,6 +43,47 @@ const Comments = ({ postId } : { postId : PublicationId}) => {
     setSelectedIdentity(value)
   }
 
+  function extractSubstring(source: string, start: string, end: string): string | null {
+    const startIdx = source.indexOf(start);
+    const endIdx = source.indexOf(end, startIdx + start.length);
+  
+    if (startIdx === -1 || endIdx === -1) return null; // Return null if start or end string is not found
+    
+    return source.slice(startIdx + start.length, endIdx); // Extracting the substring between start and end strings
+}
+const maxLover = (votes: any) => {
+  let max_key = undefined
+  let max_value = 0
+  for (const k in votes) {
+    const v = votes[k]
+    if (v > max_value) {
+      max_value = v
+      max_key = k
+    }
+  }
+  return {max_key, max_value}
+}
+  const whoLovesThisMeme = (comments: string[]) => {
+    const votes : any = {}
+    for (const comment of comments) {
+      const x = whoLovesThisMemeSingleComment(comment)
+      const identity = x[0] as string
+      const veracity = x[1]
+      if (!(identity in votes)) votes[identity] = 0
+      votes[identity] += veracity
+    }
+    return votes
+  }
+  const whoLovesThisMemeSingleComment = (comment: string) => {
+    const data = extractSubstring(comment, "__WIKI3__", "__WIKI3__")
+    const identity = extractSubstring(data!, ",", "__WIKI3__")
+    const veracity = Number(extractSubstring(data!, "__WIKI3__", ","))
+    return [
+      identity,
+      veracity,
+    ]
+  }
+
 
     const comments = commentObjects ? commentObjects.map(({ metadata: { content }}) => content ) : [];
     return (
