@@ -12,24 +12,24 @@ import { Button } from "@/components/ui/button";
  */
 export default function Home() {
   // Generate a unique session ID using uuid library.
-  const sessionId = useMemo(() => uuidv4(), []);
+  // const sessionId = useMemo(() => uuidv4(), []);
 
-  // Used to render the QR code.
-  const { Canvas } = useQRCode();
+  // // Used to render the QR code.
+  // const { Canvas } = useQRCode();
 
-  // Fetch the QR code from the server with loading + error states thanks to TanStack Query.
-  const {
-    data: qrCode,
-    isLoading: loadingQrCode,
-    isError: qrCodeError,
-  } = useGenerateQrCode(sessionId);
+  // // Fetch the QR code from the server with loading + error states thanks to TanStack Query.
+  // const {
+  //   data: qrCode,
+  //   isLoading: loadingQrCode,
+  //   isError: qrCodeError,
+  // } = useGenerateQrCode(sessionId);
 
   // Once a QR code has been loaded, check the DB every 5 seconds for a verification response.
   // That response indicates a user has successfully submitted their proof and it was verified by the server.
-  const { data: verificationResponse } = useCheckForResponse(
-    sessionId,
-    !!qrCode
-  );
+  // const { data: verificationResponse } = useCheckForResponse(
+  //   sessionId,
+  //   !!qrCode
+  // );
 
   return (
     <main className="flex min-h-screen flex-col items-center p-5 pt-24 text-center">
@@ -47,11 +47,6 @@ export default function Home() {
       {/* Render the verification status */}
       <p className="text-center max-w-2xl mb-4 text-2xl">
         Your current status:{" "}
-        {!!verificationResponse ? (
-          <span className="text-green-400">Verified</span>
-        ) : (
-          <span className="text-red-400">Not verified</span>
-        )}
       </p>
 
       <p className="text-center max-w-2xl mb-4">
@@ -147,24 +142,6 @@ export default function Home() {
         website.
       </p>
 
-      {/* Render the QR code with loading + error states */}
-      {qrCodeError && (
-        <p className="text-center">
-          Something went wrong generating the QR code.
-        </p>
-      )}
-      {!qrCodeError && loadingQrCode ? (
-        <p className="text-center">Loading...</p>
-      ) : (
-        <div className="flex justify-center">
-          <Canvas
-            text={JSON.stringify(qrCode)}
-            options={{
-              width: 384,
-            }}
-          />
-        </div>
-      )}
 
       <a
         href="https://github.com/jarrodwatts/polygon-id"
