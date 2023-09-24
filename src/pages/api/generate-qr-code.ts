@@ -10,7 +10,7 @@ export default async function generateQrCode(
   res: NextApiResponse
 ) {
   // Get the session ID out of the request body.
-  const { requestId } = req.body;
+  const { requestId, identity} = req.body;
 
   // Create the authorization request
   // Learn more: https://0xpolygonid.github.io/tutorials/verifier/verification-library/request-api-guide/#createauthorizationrequest
@@ -49,7 +49,7 @@ export default async function generateQrCode(
         context: "https://docknetwork.github.io/vc-schemas/university-degree.json-ld",
         credentialSubject: {
           degreeName: {
-            $eq: 'Physics', // TODO should be a param
+            $eq: identity, // TODO should be a param
           },
         },
       },
