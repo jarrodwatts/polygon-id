@@ -1,6 +1,6 @@
 'use client'
 import React from "react";
-import { useAccessToken, useActiveProfile, useExplorePublications, useFeed } from "@lens-protocol/react-web";
+import { PublicationId, useAccessToken, useActiveProfile, useExplorePublications, useFeed, usePublication } from "@lens-protocol/react-web";
 import { ProfileId } from "@lens-protocol/react-web";
 import LoginButton from "@/components/ui/authentication";
 import { Button } from "@/components/ui/button";
@@ -12,6 +12,11 @@ export default function Feed() {
 
         let profileId = activeProfile?.id || '0x02' as ProfileId;
         const { data: feedItems, loading: isFeedLoading, hasMore, next } = useExplorePublications()
+        // Test to always display Imi's post
+        const { data: publication, loading: isPostLoading} = usePublication({
+            publicationId: '0x91ba-0x01' as PublicationId
+        })
+        console.log("HAHAS", publication)
     return (
         <>
             <LoginButton />
@@ -20,10 +25,19 @@ export default function Feed() {
                 next={next} 
                 hasMore={hasMore}
                 className="grid place-content-center w-full">
-                {feedItems?.map((feedItem) => (
-                    feedItem.__typename == "Post" && 
-                        <Post key={feedItem.id} post={feedItem} />
-                ))}
+                <>
+                    <p> TESTING</p>
+                    {
+                        publication?.__typename == "Post" && 
+                        <Post key={'0x91ba-0x01'} post={publication} />
+                    }
+                        <p> END OF TESTING</p>
+                    {feedItems?.map((feedItem) => (
+                        feedItem.__typename == "Post" && 
+                            <Post key={feedItem.id} post={feedItem} />
+                    ))}
+                
+                </>
             </InfiniteList>
             <Button onClick={next}> Next Posts</Button>
 
