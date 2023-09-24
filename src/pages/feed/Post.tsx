@@ -1,6 +1,7 @@
 import React from "react";
 import { Post, useComments } from "@lens-protocol/react-web";
 import Comments from "./Comments";
+import { SelectForm } from "@/components/ui/select-identity";
 
 function convertIPFSToGateway(ipfsHash: string) {
     const doubleipfs = "ipfs://ipfs://"
@@ -45,6 +46,7 @@ const Post = ({ post } : { post : Post}) => {
             </div>
         </div>
         <Comments postId={post.id} />
+        <SelectForm/>
     </div>
     )
             
