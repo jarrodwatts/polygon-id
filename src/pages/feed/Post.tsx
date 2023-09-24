@@ -9,7 +9,7 @@ function convertIPFSToGateway(ipfsHash: string) {
     const singleipfs = "ipfs://"
     if (ipfsHash.includes(doubleipfs)) {
         return ipfsHash.replace(doubleipfs, "https://ipfs.io/ipfs/");
-    } else if (ipfsHash.includes(doubleipfs)) {
+    } else if (ipfsHash.includes(singleipfs)) {
         return ipfsHash.replace(singleipfs, "https://ipfs.io/ipfs/");
     }
 }
@@ -21,22 +21,17 @@ const Post = ({ post } : { post : Post}) => {
     let imageURLS;
     let imageALTS;
 
-    if (post.__typename === "Post") {
-        content = post.metadata.content
-        images = post.metadata.media
-        formatedDate = new Date(post.createdAt).toLocaleString('en-us', {month: 'short', day: 'numeric', year: '2-digit'})
-        imageURLS = images.map(({ original: { url }}) => convertIPFSToGateway(url))
-        imageALTS = images.map(({ original: { altTag }}) => altTag )
+    content = post.metadata.content
+    images = post.metadata.image
+    formatedDate = new Date(post.createdAt).toLocaleString('en-us', {month: 'short', day: 'numeric', year: '2-digit'})
+    // imageURLS = images.map(({ original: { url }}) => convertIPFSToGateway(url))
+    // imageALTS = images.map(({ original: { altTag }}) => altTag )
+    const imageUrl = post.metadata.image ? convertIPFSToGateway(post.metadata.image) : ""
         
-    } else {
-        // Ignore Mirrors and comments
-        return null
-    }
-
     return (
     <div className="flex content-center w-full">
         <div className="max-w-sm rounded overflow-hidden shadow-lg bg-white m-8 w-1/2">
-            <img className="w-full" src={imageURLS[0]} alt={ imageALTS[0] }></img>
+            <img className="w-full" src={imageUrl}></img>
             <div className="px-8 py-4">
                 <p className="text-gray-900 text-base">{post.profile.name} </p>
                 <p className="text-gray-800">

@@ -1,6 +1,7 @@
 'use client'
 import React from "react";
-import { ProfileId, useActiveProfile, useExplorePublications } from "@lens-protocol/react-web";
+import { PublicationId,  useActiveProfile, useExplorePublications, useFeed, usePublication } from "@lens-protocol/react-web";
+import { ProfileId } from "@lens-protocol/react-web";
 import LoginButton from "@/components/ui/authentication";
 import { Button } from "@/components/ui/button";
 import Post from "./Post";
@@ -14,6 +15,11 @@ export default function Feed() {
 
   let profileId = activeProfile?.id || '0x02' as ProfileId;
   const { data: feedItems, loading: isFeedLoading, hasMore, next } = useExplorePublications()
+  // Test to always display Imi's post
+  const { data: publication, loading: isPostLoading} = usePublication({
+    publicationId: '0x91ba-0x01' as PublicationId
+  })
+  console.log("HAHAS", publication)
   return (
     <>
       <LoginButton />
